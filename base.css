@@ -1,0 +1,366 @@
+*, *::after, *::before {
+    box-sizing: border-box;
+    font-family: Arial;
+  }
+
+  html {
+    height:100%;
+  }
+  
+  body {
+    background-color: hsl(240, 3%, 7%);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    margin: 0;
+    padding-bottom: 1em;
+    font-size: clamp(.5rem, 2.5vmin, 1.5rem);
+    align-content: center;
+  }
+
+  #message {
+    font-size: 2em; 
+    color: white;
+    width: 100%;
+    text-align: center;
+  }
+
+  #target-word.game-over {
+    filter: brightness(40%);
+  }
+
+  #game-over-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    gap: 2em;
+    z-index:999;
+
+  }
+
+  .game-over-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2em;
+    height: 2em;
+    color: white;
+    border-radius: 0.3em;
+    background-color: hsl(234, 70%, 44%); 
+    text-transform: uppercase;
+    font-weight: bold;
+    border: hsl(234, 70%, 44%) solid 1em;
+    user-select: none;
+  }
+
+  #confetti-canvas {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display:block;
+    z-index:999999;
+    pointer-events:none;
+  }
+
+  #game {
+    /* background-color: hsl(240, 3%, 7%); */
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    padding-bottom: 1em;
+    font-size: clamp(.5rem, 2.5vmin, 1.5rem);
+    align-content: center;
+    justify-content: space-between;
+  }
+
+  #menu {
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height:100%;
+    gap: 8%;
+  }
+
+  #title {
+    display: inline-flex;
+    align-content: center;
+    justify-content: center;
+    color: white;
+    font-size: 3em;
+  }
+
+  #menu-buttons {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1em;
+    
+  }
+
+  .menu-button {
+    font-size: 2em;
+    color: white;
+    border: .05em solid hsl(240, 2%, 23%);
+    border-radius: 0.3em;
+    background-color: hsl(115, 29%, 43%);
+    text-transform: uppercase;
+    font-weight: bold;
+    width: 100%;
+
+  } 
+  .menu-button:hover {
+    filter: brightness(120%);
+  }
+
+  .menu-button:active {
+    filter: brightness(140%);
+  }
+
+  #lobby {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height:100%;
+    gap: 4%;
+  }
+
+  #loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height:100%;
+  }
+
+  #game-link {
+    font-size: 2em;
+    color: white;
+    border: .05em solid hsl(240, 2%, 23%);
+    border-radius: 0.3em;
+    background-color: hsl(234, 70%, 44%);
+    font-weight: bold;
+  }
+
+  #guess-grid {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: scroll;
+    height: 80%;
+    width: fit-content;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    padding-right: 1px;
+    align-self: center;
+    gap: .25em;
+  }
+
+  #grid-container {
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: left;
+    gap: .75em;
+    margin-bottom: 1em;
+    margin-left: 2em;
+    margin-right: 2em;
+    padding-left: 0.2em;
+    padding-right: 0.2em;
+    overflow-x: scroll;
+  }
+
+  /* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: none; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
+
+  .row {
+    display: inline-flex;
+    gap: .25em;
+    animation-name: slide;
+    animation-duration: 0.2s;
+    animation-fill-mode: forwards;
+    animation-timing-function: linear;
+    border: #555;
+  }
+
+  @keyframes slide {
+    from {
+      transform: scale(1, 0);
+    }
+    to {
+      height: scale(1, 1);
+    }
+  }
+
+
+  .tile {
+    font-size: 1.5em;
+    color: white;
+    border: .05em solid hsl(240, 2%, 23%);
+
+    width: 1.75em;
+    height: 1.75em;
+
+    flex-shrink: 1;
+
+    text-transform: uppercase;
+    font-weight: bold;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    transition: transform 250ms linear;
+
+    pointer-events: none;
+
+  }
+
+  .tile.entered {
+    background-color: rgb(1, 10, 131);
+    color: rgb(255, 255, 255);
+    border: none;
+  }
+  
+  .tile[data-state="active"] {
+    border-color: hsl(200, 1%, 34%);
+  }
+  
+  .tile[data-state="wrong"] {
+    border: none;
+    background-color: hsl(240, 2%, 23%);
+  }
+  
+  .tile[data-state="wrong-location"] {
+    border: none;
+    background-color: hsl(49, 51%, 47%);
+  }
+  
+  .tile[data-state="correct"] {
+    border: none;
+    background-color: hsl(115, 29%, 43%);
+  }
+
+  .tile.opponent {
+    /* border-top: solid 0.1em red; */
+    border-bottom: solid 0.15em red;
+  }
+  
+  .tile.shake {
+    animation: shake 250ms ease-in-out;
+  }
+  
+  .tile.dance {
+    animation: dance 500ms ease-in-out;
+  }
+  
+  .tile.flip {
+    transform: rotateX(90deg);
+  }
+  
+  @keyframes shake {
+    10% {
+      transform: translateX(-5%);
+    }
+  
+    30% {
+      transform: translateX(5%);
+    }
+  
+    50% {
+      transform: translateX(-7.5%);
+    }
+  
+    70% {
+      transform: translateX(7.5%);
+    }
+  
+    90% {
+      transform: translateX(-5%);
+    }
+  
+    100% {
+      transform: translateX(0);
+    }
+  }
+  
+  @keyframes dance {
+    20% {
+      transform: translateY(-50%);
+    }  
+  
+    40% {
+      transform: translateY(5%);
+    }  
+  
+    60% {
+      transform: translateY(-25%);
+    }  
+  
+    80% {
+      transform: translateY(2.5%);
+    }  
+  
+    90% {
+      transform: translateY(-5%);
+    }  
+  
+    100% {
+      transform: translateY(0);
+    }
+  }
+  
+  #alert-container {
+    position: fixed;
+    top: 10vh;
+    left: 50vw;
+    transform: translateX(-50%);
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .alert {
+    pointer-events: none;
+    background-color: hsl(204, 7%, 85%);
+    padding: .75em;
+    border-radius: .25em;
+    opacity: 1;
+    transition: opacity 500ms ease-in-out;
+    margin-bottom: .5em;
+  }
+  
+  .alert:last-child {
+    margin-bottom: 0;
+  }
+  
+  .alert.hide {
+    opacity: 0;
+  }
+
